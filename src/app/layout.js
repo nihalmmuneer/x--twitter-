@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
           <div className="hidden sm:inline border-r h-screen">
             <SideBar />
           </div>
-          <div>{children}</div>
+          <div className="flex-1 ">{children}</div>
           <div className="p-3 border-l hidden lg:flex flex-col w-[24rem]">
           <div className="sticky top-0 bg-white py-2">
             <input type="text" placeholder="Search" className="border bg-gray-100 rounded-3xl px-4 py-2 text-sm border-gray-200"/>
