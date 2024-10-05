@@ -9,6 +9,12 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
+import {
+  addDoc,
+  collection,
+  getFirestore,
+  serverTimestamp,
+} from "firebase/firestore";
 
 const Input = () => {
   const { data: session } = useSession();
@@ -16,6 +22,9 @@ const Input = () => {
   const [imageFileUploading, setImageFileUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFileUrl, setSelectedFileUrl] = useState(null);
+  const [text, setText] = useState("");
+  const [postLoading, setPostLoading] = useState(false);
+  const db = getFirestore(app);
 
   const addImageToPost = (e) => {
     const file = e.target.files[0];
@@ -58,6 +67,22 @@ const Input = () => {
       }
     );
   };
+  const handlePost = async () => {
+    setPostLoading(true);
+    const docRef = await addDoc(collection(db, "posts"), {
+      uuid: session.user.uuid,
+      name: session.user.name,
+      username: session.user.username,
+      text,
+      profileImg: session.user.image,
+      timestamp: serverTimestamp(),
+      image: selectedFileUrl,
+    });
+    setPostLoading(false);
+    setText("");
+    setSelectedFileUrl(null);
+    setSelectedFile(null);
+  };
   if (!session) return null;
   return (
     <div className="flex border-b border-gray-200 p-3 space-x-3">
@@ -71,12 +96,16 @@ const Input = () => {
           rows="2"
           placeholder="What's Happening.."
           className="w-full border-none outline-none min-h-[50px] text-gray-700 tracking-wide"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
         ></textarea>
         {selectedFile && (
           <img
             src={selectedFileUrl}
             alt="selected-img"
-            className="w-full max-h-[250px] object-cover cursor-pointer"
+            className={`w-full max-h-[250px] object-cover cursor-pointer ${
+              imageFileUploading ? "animate-pulse" : ""
+            }`}
           />
         )}
         <div className="flex items-center justify-between pt-2.5">
@@ -92,8 +121,9 @@ const Input = () => {
             hidden
           />
           <button
-            disabled
+            disabled={postLoading || imageFileUploading || text.trim() === ""}
             className="bg-blue-400 px-4 rounded-full py-1.5 text-white shadow-md font-bold hover:brightness-95 disabled:opacity-50"
+            onClick={handlePost}
           >
             Post
           </button>
