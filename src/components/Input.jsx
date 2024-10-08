@@ -82,6 +82,7 @@ const Input = () => {
     setText("");
     setSelectedFileUrl(null);
     setSelectedFile(null);
+    location.reload();
   };
   if (!session) return null;
   return (
