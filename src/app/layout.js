@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
       <SessionWrapper>
         <div className="flex justify-between max-w-6xl mx-auto">
-          <div className="hidden sm:inline border-r h-screen">
+          <div className="hidden sm:inline border-r h-screen sticky top-0">
             <SideBar />
           </div>
           <div className="flex-1 ">{children}</div>

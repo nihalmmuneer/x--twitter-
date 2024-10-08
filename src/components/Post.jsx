@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { HiDotsHorizontal } from "react-icons/hi";
+import Icons from "./Icons";
 const Post = ({ post, id }) => {
   return (
     <div className=" flex border-b p-3 border-gray-200">
@@ -25,6 +26,7 @@ const Post = ({ post, id }) => {
         <Link href={`posts/${post.id}`}>
           <img src={post.image} alt="post-img" className="rounded-2xl max-h-[300px] w-full object-cover" />
         </Link>
+        <Icons/>
       </div>
     </div>
   );
