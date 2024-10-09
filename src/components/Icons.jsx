@@ -17,10 +17,13 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { app } from "@/firebase";
+import { useRecoilState } from "recoil";
+import { modalState } from "@/atom/atom";
 const Icons = ({ id, uuid }) => {
   const { data: session } = useSession();
   const [likes, setLikes] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
+  const [isOpen, setIsOpen] = useRecoilState(modalState);
   const db = getFirestore(app);
   const likePost = async () => {
     if (session) {
@@ -82,7 +85,10 @@ const Icons = ({ id, uuid }) => {
           </span>
         )}
       </div>
-      <HiOutlineChat className=" cursor-pointer rounded-full hover:text-sky-500 p-2 hover:bg-sky-100 w-8 h-8" />
+      <HiOutlineChat
+        onClick={() => setIsOpen(!isOpen)}
+        className=" cursor-pointer rounded-full hover:text-sky-500 p-2 hover:bg-sky-100 w-8 h-8"
+      />
       {session?.user?.uuid === uuid && (
         <HiOutlineTrash
           className="cursor-pointer rounded-full hover:text-red-500 hover: hover:bg-red-100 w-8  h-8 p-2"
