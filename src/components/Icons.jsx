@@ -19,11 +19,13 @@ import {
 import { app } from "@/firebase";
 import { useRecoilState } from "recoil";
 import { modalState } from "@/atom/atom";
+import { postIdState } from "@/atom/atom";
 const Icons = ({ id, uuid }) => {
   const { data: session } = useSession();
   const [likes, setLikes] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
   const [isOpen, setIsOpen] = useRecoilState(modalState);
+  const [postId, setPostId] = useRecoilState(postIdState);
   const db = getFirestore(app);
   const likePost = async () => {
     if (session) {
@@ -86,7 +88,14 @@ const Icons = ({ id, uuid }) => {
         )}
       </div>
       <HiOutlineChat
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          if (!session) {
+            signIn();
+          } else {
+            setIsOpen(!isOpen);
+            setPostId(id);
+          }
+        }}
         className=" cursor-pointer rounded-full hover:text-sky-500 p-2 hover:bg-sky-100 w-8 h-8"
       />
       {session?.user?.uuid === uuid && (
