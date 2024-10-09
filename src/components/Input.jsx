@@ -88,7 +88,7 @@ const Input = () => {
   return (
     <div className="flex border-b border-gray-200 p-3 space-x-3">
       <img
-        src={session.user.image}
+        src={session?.user?.image}
         alt="user-img"
         className="w-11 h-11 rounded-full cursor-pointer hover:brightness-95"
       />

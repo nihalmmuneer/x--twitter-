@@ -17,7 +17,7 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { app } from "@/firebase";
-const Icons = ({ id }) => {
+const Icons = ({ id, uuid }) => {
   const { data: session } = useSession();
   const [likes, setLikes] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
@@ -36,6 +36,21 @@ const Icons = ({ id }) => {
       signIn();
     }
   };
+
+  const deletePost = async () => {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      if (session.user.uuid === uuid) {
+        await deleteDoc(doc(db, "posts", id))
+          .then(() => {
+            console.log("Document Successfully Deleted!");
+            window.location.reload();
+          })
+          .catch((error) => console.log("Error removing the document:", error));
+      } else {
+        alert("You are not authorized to delete this post");
+      }
+    }
+  };
   useEffect(() => {
     onSnapshot(collection(db, "posts", id, "likes"), (snapshot) => {
       setLikes(snapshot.docs);
@@ -43,7 +58,9 @@ const Icons = ({ id }) => {
   }, [db]);
 
   useEffect(() => {
-    setIsLiked(likes.findIndex((like) => like.id === session.user.uuid) !== -1);
+    setIsLiked(
+      likes.findIndex((like) => like.id === session?.user?.uuid) !== -1
+    );
   }, [likes]);
   return (
     <div className="flex text-gray-700 justify-start gap-5 p-2">
@@ -66,7 +83,12 @@ const Icons = ({ id }) => {
         )}
       </div>
       <HiOutlineChat className=" cursor-pointer rounded-full hover:text-sky-500 p-2 hover:bg-sky-100 w-8 h-8" />
-      <HiOutlineTrash className="cursor-pointer rounded-full hover:text-red-500 hover: hover:bg-red-100 w-8  h-8 p-2" />
+      {session?.user?.uuid === uuid && (
+        <HiOutlineTrash
+          className="cursor-pointer rounded-full hover:text-red-500 hover: hover:bg-red-100 w-8  h-8 p-2"
+          onClick={deletePost}
+        />
+      )}
     </div>
   );
 };

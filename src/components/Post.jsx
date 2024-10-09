@@ -6,7 +6,7 @@ const Post = ({ post, id }) => {
   return (
     <div className=" flex border-b p-3 border-gray-200">
       <img
-        src={post.profileImg}
+        src={post?.profileImg}
         alt="profile-img"
         className="w-11 h-11 rounded-full mr-4"
       />
@@ -18,7 +18,7 @@ const Post = ({ post, id }) => {
               @{post.username}
             </span>
           </div>
-          <HiDotsHorizontal className="text-sm" />
+          <HiDotsHorizontal className="text-sm cursor-pointer" />
         </div>
         <Link href={`posts/${post.id}`}>
           <p className="text-gray-800 text-sm my-2">{post.text}</p>
@@ -30,7 +30,7 @@ const Post = ({ post, id }) => {
             className="rounded-2xl max-h-[300px] w-full object-cover"
           />
         </Link>
-        <Icons id={post.id} />
+        <Icons id={post.id} uuid={post.uuid} />
       </div>
     </div>
   );
