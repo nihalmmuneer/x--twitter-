@@ -25,7 +25,7 @@ const Post = ({ post, id }) => {
         </Link>
         <Link href={`posts/${post.id}`}>
           <img
-            src={post.image}
+            src={post?.image}
             alt="post-img"
             className="rounded-2xl max-h-[300px] w-full object-cover"
           />
