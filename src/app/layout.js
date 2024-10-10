@@ -10,6 +10,7 @@ export const metadata = {
   title: "X-Twitter",
   description: "Create X-Twitter Using NextJs and Tailwind Css",
 };
+export const dynamic = "force-dynamic";
 
 export default function RootLayout({ children }) {
   return (
