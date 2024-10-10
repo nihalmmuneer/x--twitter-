@@ -5,8 +5,17 @@ import { useRecoilState } from "recoil";
 import Modal from "react-modal";
 import { useSession } from "next-auth/react";
 import { HiX } from "react-icons/hi";
-import { getFirestore, onSnapshot, doc } from "firebase/firestore";
+import { addDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  onSnapshot,
+  doc,
+  collection,
+  serverTimestamp,
+} from "firebase/firestore";
 import { app } from "@/firebase";
+import { comment } from "postcss";
+import { useRouter } from "next/navigation";
 const commentModal = () => {
   const [open, setOpen] = useRecoilState(modalState);
   const [postId, setPostId] = useRecoilState(postIdState);
@@ -14,10 +23,23 @@ const commentModal = () => {
   const [post, setPost] = useState({});
   const { data: session } = useSession();
   const db = getFirestore(app);
+  const router = useRouter();
 
   const sendComment = () => {
-    
-  }
+    addDoc(collection(db, "posts", postId, "comments"), {
+      name: session?.user?.name,
+      username: session?.user?.username,
+      userImg: session?.user?.image,
+      comment: input,
+      timestamp: serverTimestamp(),
+    })
+      .then(() => {
+        setInput("");
+        setOpen(false);
+        router.push(`/posts/${postId}`);
+      })
+      .catch((error) => console.log("Error adding Document:", error));
+  };
   useEffect(() => {
     if (postId !== "") {
       const postRef = doc(db, "posts", postId);
@@ -31,6 +53,8 @@ const commentModal = () => {
       return () => unsubscribe();
     }
   }, [postId]);
+
+
   return (
     <div>
       {open && (

@@ -20,9 +20,11 @@ import { app } from "@/firebase";
 import { useRecoilState } from "recoil";
 import { modalState } from "@/atom/atom";
 import { postIdState } from "@/atom/atom";
+import { comment } from "postcss";
 const Icons = ({ id, uuid }) => {
   const { data: session } = useSession();
   const [likes, setLikes] = useState([]);
+  const [comments, setComments] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
   const [isOpen, setIsOpen] = useRecoilState(modalState);
   const [postId, setPostId] = useRecoilState(postIdState);
@@ -61,6 +63,13 @@ const Icons = ({ id, uuid }) => {
       setLikes(snapshot.docs);
     });
   }, [db]);
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(db, "posts", id, "comments"),
+      (snapshot) => setComments(snapshot.docs)
+    );
+    return () => unsubscribe();
+  }, [db, id]);
 
   useEffect(() => {
     setIsLiked(
@@ -87,17 +96,22 @@ const Icons = ({ id, uuid }) => {
           </span>
         )}
       </div>
-      <HiOutlineChat
-        onClick={() => {
-          if (!session) {
-            signIn();
-          } else {
-            setIsOpen(!isOpen);
-            setPostId(id);
-          }
-        }}
-        className=" cursor-pointer rounded-full hover:text-sky-500 p-2 hover:bg-sky-100 w-8 h-8"
-      />
+      <div className="flex items-center">
+        <HiOutlineChat
+          onClick={() => {
+            if (!session) {
+              signIn();
+            } else {
+              setIsOpen(!isOpen);
+              setPostId(id);
+            }
+          }}
+          className=" cursor-pointer rounded-full hover:text-sky-500 p-2 hover:bg-sky-100 w-8 h-8"
+        />
+        {comments.length > 0 && (
+          <span className="text-xs">{comments.length}</span>
+        )}
+      </div>
       {session?.user?.uuid === uuid && (
         <HiOutlineTrash
           className="cursor-pointer rounded-full hover:text-red-500 hover: hover:bg-red-100 w-8  h-8 p-2"
