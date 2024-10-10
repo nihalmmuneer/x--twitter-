@@ -14,9 +14,8 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { app } from "@/firebase";
-import { comment } from "postcss";
 import { useRouter } from "next/navigation";
-const commentModal = () => {
+const CommentModal = () => {
   const [open, setOpen] = useRecoilState(modalState);
   const [postId, setPostId] = useRecoilState(postIdState);
   const [input, setInput] = useState("");
@@ -123,4 +122,4 @@ const commentModal = () => {
   );
 };
 
-export default commentModal;
+export default CommentModal;
