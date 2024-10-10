@@ -16,7 +16,6 @@ const Comment = ({ comment, commentId, originalPostId }) => {
   const [isLiked, setIsLiked] = useState(false);
   const { data: session } = useSession();
 
-  console.log(comment);
   const db = getFirestore(app);
   const likePost = async () => {
     if (session) {

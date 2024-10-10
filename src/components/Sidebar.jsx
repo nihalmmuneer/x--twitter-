@@ -8,7 +8,6 @@ import { HiDotsHorizontal } from "react-icons/hi";
 
 const SideBar = () => {
   const { data: session } = useSession();
-  console.log(session);
   return (
     <div className="flex flex-col justify-between h-screen">
       <div className="flex flex-col gap-4 p-3">

@@ -10,8 +10,6 @@ const postPage = async ({ params }) => {
   const db = getFirestore(app);
   let data = {};
   const querySnapshot = await getDoc(doc(db, "posts", params.id));
-  console.log(querySnapshot.data(), "query-snap-shot");
-  console.log(querySnapshot.id);
   data = { ...querySnapshot.data(), id: querySnapshot.id };
   return (
     <div className="max-w-xl mx-auto border-r border-l min-h-screen">
